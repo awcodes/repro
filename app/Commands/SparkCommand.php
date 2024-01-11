@@ -100,7 +100,7 @@ class SparkCommand extends Command
         try {
             spin(
                 callback: function () {
-                    Process::run("composer install")->throw();
+                    Process::run("composer update")->throw();
                 },
                 message: 'Installing composer dependencies...',
             );
