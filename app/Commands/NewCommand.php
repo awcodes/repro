@@ -4,16 +4,16 @@ namespace App\Commands;
 
 use App\Commands\Concerns\CanOpenEditor;
 use App\Commands\Concerns\HasUtilities;
-use App\Commands\Concerns\InteractsWithComposer;
 use App\Commands\Concerns\InteractsWithFiles;
 use App\Commands\Concerns\InteractsWithGithub;
-use App\Commands\Concerns\InteractsWithLaravel;
+use App\Commands\Concerns\InteractsWithComposer;
 use App\Commands\Concerns\InteractsWithNode;
+use App\Commands\Concerns\InteractsWithLaravel;
 use App\Setup;
 use Illuminate\Support\Facades\Process;
 use LaravelZero\Framework\Commands\Command;
 
-class SparkCommand extends Command
+class NewCommand extends Command
 {
     use CanOpenEditor;
     use HasUtilities;
@@ -28,14 +28,14 @@ class SparkCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'spark {--F|force}';
+    protected $signature = 'new {--F|force}';
 
     /**
      * The description of the command.
      *
      * @var string
      */
-    protected $description = 'Set up a new Filament reproduction repo locally.';
+    protected $description = 'Set up a new reproduction repo locally.';
 
     protected Setup $config;
 
@@ -46,7 +46,7 @@ class SparkCommand extends Command
      */
     public function handle(): int
     {
-        $this->config = (new Setup())->configure(localFilament: true);
+        $this->config = (new Setup())->configure();
 
         if ($this->option('force')) {
             Process::run("rm -rf " . $this->config->getWorkingDirectory());
@@ -55,7 +55,7 @@ class SparkCommand extends Command
         $this
             ->cloneRepo()
             ->changeDirectory($this->config->getWorkingDirectory())
-            ->modifyFilamentComposer()
+            ->modifyComposer()
             ->installComposerDependencies()
             ->installNpmDependencies()
             ->runNpmBuild()
